@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+weather convertor
+{% endblock title %}
+
+
+{% block body %}
+<div class="container" style="margin:50px; width:500px;">
+<form class="from-control" >
+    <input type="text" class="form-group" id="input" placeholder="base value">
+    <button class="btn btn-primary" id="btn">convert</button>
+<br>
+    <div class="currency">
+<h1 id="heading" style="margin:10px; width:800px;"></h1>
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+  var values=null;
+  var btn=document.querySelector('#btn');
+  btn.addEventListener("click",function(e){
+
+      e.preventDefault();
+      var field=document.querySelector("#input").value;
+      var data={symbols:field}
+      var upper=field.toUpperCase();
+      console.log(data)
+
+      fetch("/gets",{
+        method:"POST",
+        credentials:"include",
+        cache:"no-cache",
+        headers:{
+          "content-type": "application/json"
+        },
+        body:JSON.stringify(data)
+      }).then(function(response){
+        return response.json();
+
+      }).then(function(myjson){
+        console.log(myjson.rates);
+        var ele=document.querySelector("#heading")
+
+        ele.innerText=JSON.stringify(myjson.rates[upper] +`${upper} ` + "" + `is the converted price`);
+        })
+  });
+
+</script>
+
+
+{% endblock body %}
